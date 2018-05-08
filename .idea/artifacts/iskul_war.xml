@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="iskul:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="iskul.war">
+      <element id="artifact" artifact-name="iskul:war exploded" />
+    </root>
+  </artifact>
+</component>

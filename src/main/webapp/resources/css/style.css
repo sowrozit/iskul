@@ -1,0 +1,19 @@
+.container{
+    background-color: aqua;
+}
+
+
+.correct{
+    background-color: greenyellow;
+}
+
+.incorrect{
+    background-color: red;
+}
+
+.ques {
+    display: inline-block;
+}
+.login{
+    padding-top: 10%;
+}

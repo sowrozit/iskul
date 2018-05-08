@@ -1,0 +1,134 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Specifying base package of the Components like Controller, Service, 
+		DAO -->
+	<context:component-scan base-package="com.iskul" />
+
+	<!-- Getting Database properties -->
+	<context:property-placeholder location="classpath:application.properties" />
+
+
+    <!-- Specifying the Resource location to load JS, CSS, Images etc -->
+    <!--<mvc:resources mapping="/webjars/**" location="/webjars/"/>-->
+
+	<mvc:annotation-driven />
+
+    <!-- Specifying the Resource location to load JS, CSS, Images etc -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+    <!--Interceptors-->
+	<mvc:interceptors>
+		<!--<mvc:interceptor>-->
+        <!--<mvc:mapping path="/admin/**"/>-->
+        <!--<bean class="com.iskul.interceptors.AdminInterceptor"/>-->
+    <!--</mvc:interceptor>-->
+
+		<mvc:interceptor>
+			<mvc:mapping path="/manage/**"/>
+			<bean class="com.iskul.interceptors.ManageInterceptor"/>
+		</mvc:interceptor>
+
+        <mvc:interceptor>
+			<mvc:mapping path="/manage/admin/**"/>
+			<bean class="com.iskul.interceptors.AdminInterceptor"/>
+		</mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/manage/adminTeacher/**"/>
+            <bean class="com.iskul.interceptors.AdminTeacherInterceptor"/>
+        </mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/manage/adminTeacherStudent/**"/>
+			<bean class="com.iskul.interceptors.AdminTeacherStudentInterceptor" />
+		</mvc:interceptor>
+
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/student/**"/>-->
+			<!--<bean class="com.iskul.interceptors.StudentInterceptor"/>-->
+		<!--</mvc:interceptor>-->
+	</mvc:interceptors>
+
+
+	<!-- View Resolver -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- DataSource -->
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		id="dataSource">
+		<property name="driverClassName" value="${database.driver}"></property>
+		<property name="url" value="${database.url}"></property>
+		<property name="username" value="${database.user}"></property>
+		<property name="password" value="${database.password}"></property>
+	</bean>
+
+	<!-- Hibernate SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+
+		<!--<property name="configLocation">-->
+			<!--<value>classpath:hibernate.cfg.xml</value>-->
+		<!--</property>-->
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<!--<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>-->
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<!--<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>-->
+			</props>
+		</property>
+		<!--<property name="annotatedClasses">-->
+			<!--<list>-->
+				<!--<value>com.iskul.model.Subject</value>-->
+				<!--<value>com.iskul.model.Category</value>-->
+				<!--<value>com.iskul.model.Registration</value>-->
+				<!--<value>com.iskul.model.Topic</value>-->
+				<!--<value>com.iskul.model.User</value>-->
+
+			<!--</list>-->
+		<!--</property>-->
+		<property name="packagesToScan" value="com.iskul.model"></property>
+	</bean>
+
+	<!--<bean id="multipartResolver"-->
+		  <!--class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+
+		<!--&lt;!&ndash; one of the properties available; the maximum file size in bytes &ndash;&gt;-->
+		<!--<property name="maxUploadSize" value="10000000" />-->
+	<!--</bean>-->
+
+	<!-- Transaction -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+    <!--MultiPartResolver-->
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    </bean>
+
+    <bean id="messageSource"
+		  class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="/WEB-INF/messages" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+    <mvc:resources mapping="/images/**" location="file:\E:\\images\"
+    cache-period="31556926"/>
+
+</beans>
